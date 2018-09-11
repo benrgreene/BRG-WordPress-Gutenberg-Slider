@@ -13,6 +13,7 @@ registerBlockType(
     description: 'Container for the Gutenberg slider blocks',
     parent: ['brg/gutenberg-slider-container'],
     category: 'layout',
+    icon: 'format-image',
     attributes: {
       background: {
         attribute: 'src',

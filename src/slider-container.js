@@ -7,6 +7,7 @@ registerBlockType(
     title: 'Gutenberg Slider Container',
     description: 'Container for the Gutenberg slider blocks',
     category: 'layout',
+    icon: 'images-alt2',
     edit() {
       // what we display in the editor
       return (
