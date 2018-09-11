@@ -81,19 +81,31 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/app.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/css-loader/index.js!./src/styles/block-editor.css":
-/*!***************************************************************!*\
-  !*** ./node_modules/css-loader!./src/styles/block-editor.css ***!
-  \***************************************************************/
+/***/ "./node_modules/brg-slider/main.js":
+/*!*****************************************!*\
+  !*** ./node_modules/brg-slider/main.js ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/lib/css-base.js */ \"./node_modules/css-loader/lib/css-base.js\")(false);\n// imports\n\n\n// module\nexports.push([module.i, \".editor-slider-container {\\n  border: 1px solid #CCC;\\n  padding: 10px 0;\\n  background-color: #EFEFEF;\\n}\\n\\n.editor-slide-background {\\n  margin-bottom: 20px;\\n  cursor: pointer;\\n}\\n\\n.editor-slide-content {\\n  background-color: #DDD;\\n  padding: 5px 20px;\\n}\", \"\"]);\n\n// exports\n\n\n//# sourceURL=webpack:///./src/styles/block-editor.css?./node_modules/css-loader");
+"use strict";
+eval("\n\nmodule.exports = {\n  sliders: [],\n  includedStyles: false,\n  /**\n   * Instantiate new slider \n   */\n  newSlider: function newSlider(options) {\n    // Make sure the slider styles are included\n    if (!this.includedStyles) {\n      this.setupSliderGlobals();\n      this.includedStyles = true;\n    }\n\n    // setup the newslider object\n    var sliderOptions = this.setDefaults(options);\n    var sliderObject = this.newSliderObject(sliderOptions);\n    this.sliders.push(sliderObject);\n\n    // Get the slider elements\n    sliderObject.sliderContainer = document.querySelector(sliderOptions.slider);\n    sliderObject.slides = document.querySelectorAll(sliderOptions.slider + ' .slide');\n    // Add the slider class for styling \n    sliderObject.sliderContainer.classList.add('slider');\n    // set slider position\n    this.moveSlide(sliderObject, 0);\n\n    // Setup the slider arrows\n    if (sliderOptions.hasArrows) {\n      this.setUpArrows(sliderObject);\n    }\n    // Setup slider timer\n    if (sliderOptions.timer) {\n      this.setUpTimer(sliderObject);\n    }\n    // Setup slider navigation dots\n    if (sliderOptions.hasDots) {\n      this.setUpDots(sliderObject);\n    }\n\n    // On the first image load, resize the slider\n    var firstImage = document.querySelectorAll(sliderOptions.slider + ' img')[0];\n    var self = this;\n    if (firstImage) {\n      firstImage.onload = function (event) {\n        self.setSliderHeight(sliderObject);\n      };\n    }\n  },\n  // Create a new blank/default slider object\n  newSliderObject: function newSliderObject(sliderOptions) {\n    return {\n      'options': sliderOptions,\n      'currentSlide': 0,\n      'dots': [],\n      'sliderTimer': null,\n      'slides': null,\n      'sliderContainer': null\n    };\n  },\n  // Make sure defaults are set for the slider\n  setDefaults: function setDefaults(options) {\n    options.variableHeight = undefined != options.variableHeight ? options.variableHeight : true;\n    options.hasDots = undefined != options.hasDots ? options.hasDots : true;\n    options.hasArrows = undefined != options.hasArrows ? options.hasArrows : true;\n    options.timer = undefined != options.timer ? options.timer : false;\n    options.dotColor = undefined != options.dotColor ? options.dotColor : '#18F';\n    return options;\n  },\n  // Setup the slider arrows\n  setUpArrows: function setUpArrows(slider) {\n    var self = this;\n    var leftArrow = document.createElement('div');\n    leftArrow.innerHTML = '&#10145;';\n    leftArrow.classList.add('arrow-left');\n    leftArrow.addEventListener('click', function (event) {\n      self.moveSlide(slider, -1);\n      self.resetSlideTimer(slider);\n    });\n\n    var rightArrow = document.createElement('div');\n    rightArrow.innerHTML = '&#10145;';\n    rightArrow.classList.add('arrow-right');\n    rightArrow.addEventListener('click', function (event) {\n      self.moveSlide(slider, 1);\n      self.resetSlideTimer(slider);\n    });\n\n    slider.sliderContainer.appendChild(leftArrow);\n    slider.sliderContainer.appendChild(rightArrow);\n  },\n  // Set up the slider dots (and listeners)\n  setUpDots: function setUpDots(slider) {\n    var dotContainer = document.createElement('ul');\n    dotContainer.classList.add('dot-container');\n\n    // For all the instance's slides, add a dot to the slider's dot container\n    var self = this;\n    slider.slides.forEach(function (slide, i) {\n      var newDot = document.createElement('li');\n      newDot.classList.add('dot');\n      // If it's the first dot, add the 'active dot' class\n      if (0 == i) {\n        newDot.classList.add('dot--active');\n      }\n      // Add a listener to the dot to move the slider to the coresponding dot\n      newDot.addEventListener('click', function (event) {\n        slider.currentSlide = i;\n        self.moveSlide(slider, 0);\n        self.resetSlideTimer(slider);\n      });\n      dotContainer.appendChild(newDot);\n      slider.dots.push(newDot);\n    });\n    // Add the active dot styling\n    var dotStyleElement = document.createElement('style');\n    dotStyleElement.innerHTML = slider.options.slider + ' .dot--active { background-color: ' + slider.options.dotColor + '; }';\n    dotContainer.appendChild(dotStyleElement);\n    // Add dots to the slider container\n    slider.sliderContainer.appendChild(dotContainer);\n  },\n  /*\n   * Move to a new slide\n   */\n  moveSlide: function moveSlide(slider, direction) {\n    slider.currentSlide += direction;\n    // Wrap to the other side of the slider is we're past slider bounds\n    if (0 > slider.currentSlide) {\n      slider.currentSlide = slider.slides.length - 1;\n    } else if (slider.currentSlide >= slider.slides.length) {\n      slider.currentSlide = 0;\n    }\n    // Set positioning of all slides\n    slider.slides.forEach(function (slide, index) {\n      var position = (index - slider.currentSlide) * 100 + 'vw';\n      slide.style.left = position;\n    });\n\n    // Reset slider height (if applicable)\n    if (slider.options.variableHeight) {\n      this.setSliderHeight(slider);\n    }\n\n    // Reset dot classes (if dots are enabled)\n    if (slider.options.hasDots) {\n      slider.dots.forEach(function (dot, index) {\n        if (index == slider.currentSlide) {\n          // new active slide\n          dot.classList.add('dot--active');\n        } else {\n          // inactive slide\n          dot.classList.remove('dot--active');\n        }\n      });\n    }\n\n    // Dispatch an event for the new slide\n    var slideEvent = new CustomEvent('slideMoved', { detail: {\n        'slide': slider.slides[slider.currentSlide],\n        'direction': direction,\n        'index': slider.currentSlide\n      } });\n    document.dispatchEvent(slideEvent);\n  },\n  // set the height of the slider to the height of the child\n  setSliderHeight: function setSliderHeight(sliderObject) {\n    var newHeight = sliderObject.slides[sliderObject.currentSlide].offsetHeight;\n    sliderObject.sliderContainer.style.height = newHeight + 'px';\n  },\n  // slider timer for moving the slide along\n  setUpTimer: function setUpTimer(slider) {\n    var self = this;\n    slider.sliderTimer = setInterval(function () {\n      self.moveSlide(slider, 1);\n    }, slider.options.timer);\n  },\n  // reset the slider timer\n  resetSlideTimer: function resetSlideTimer(slider) {\n    // reset the slider timer\n    if (slider.sliderTimer) {\n      clearInterval(slider.sliderTimer);\n      slider.sliderTimer = null;\n      this.setUpTimer(slider);\n    }\n  },\n  // Setup for sliders in general. \n  setupSliderGlobals: function setupSliderGlobals() {\n    // Add all the styling for the microlibrary\n    var styleElement = document.createElement('style');\n    styleElement.innerHTML = \".arrow-left,.arrow-right,.dot-container{margin: 0;padding:10px 15px;background-color:rgba(100,100,100,.8);z-index:10}.slider{position:relative;width:100%;overflow:hidden;transition:height .75s}.slide{position:absolute;display:block;width:100%;transition:left .75s}.arrow-left,.arrow-right{position:absolute;top:50%;color:#FFF;cursor:pointer}.arrow-left{left:0;transform:translateY(-50%) scale(-1,1)}.arrow-right{right:0;transform:translateY(-50%)}.dot-container{position:absolute;bottom:0;left:50%;transform:translateX(-50%);line-height:15px}.dot{position:relative;display:inline-block;border-radius:50%;height:15px;width:15px;background-color:#FFF;cursor:pointer}.dot+.dot{margin-left:15px}\";\n    document.body.appendChild(styleElement);\n    // on resize, we want to reset the slider height for each slider\n    var self = this;\n    window.addEventListener('resize', function (event) {\n      self.sliders.forEach(function (slider, i) {\n        if (slider.options.variableHeight) {\n          self.setSliderHeight(slider);\n        }\n      });\n    });\n  }\n};\n\n//# sourceURL=webpack:///./node_modules/brg-slider/main.js?");
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./src/styles/block-style.css":
+/*!**************************************************************!*\
+  !*** ./node_modules/css-loader!./src/styles/block-style.css ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/lib/css-base.js */ \"./node_modules/css-loader/lib/css-base.js\")(false);\n// imports\n\n\n// module\nexports.push([module.i, \".guttenberg-slide {\\n  background-position: center;\\n  background-size: cover;\\n  background-repeat: no-repeat;\\n}\\n\\n.slide {\\n  padding: 40px 60px;\\n}\", \"\"]);\n\n// exports\n\n\n//# sourceURL=webpack:///./src/styles/block-style.css?./node_modules/css-loader");
 
 /***/ }),
 
@@ -132,50 +144,26 @@ eval("\n\n/**\n * When source maps are enabled, `style-loader` uses a link eleme
 
 /***/ }),
 
-/***/ "./src/index.js":
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
+/***/ "./src/app.js":
+/*!********************!*\
+  !*** ./src/app.js ***!
+  \********************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\n__webpack_require__(/*! ./slider-container */ \"./src/slider-container.js\");\n__webpack_require__(/*! ./slider-block */ \"./src/slider-block.js\");\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("\n\n__webpack_require__(/*! ./styles/block-style.css */ \"./src/styles/block-style.css\");\n\nvar sliderLibrary = __webpack_require__(/*! brg-slider */ \"./node_modules/brg-slider/main.js\");\n\ndocument.addEventListener('DOMContentLoaded', function (event) {\n  // get all the sliders on the page.\n  var allSliders = document.querySelectorAll('.gutenberg__slider');\n  allSliders.forEach(function (slider, index) {\n    // add an ID for the slider library to use\n    slider.id = 'slider-' + index;\n    // get the direct children of the slider\n    // and set them all to have the 'slide' class\n    var directChildren = document.querySelectorAll('#' + slider.id + ' > *');\n    directChildren.forEach(function (el, i) {\n      if (el) {\n        el.classList.add('slide');\n      }\n    });\n    // instantiate the slider\n    sliderLibrary.newSlider({\n      'slider': '#' + slider.id\n    });\n  });\n});\n\n//# sourceURL=webpack:///./src/app.js?");
 
 /***/ }),
 
-/***/ "./src/slider-block.js":
-/*!*****************************!*\
-  !*** ./src/slider-block.js ***!
-  \*****************************/
+/***/ "./src/styles/block-style.css":
+/*!************************************!*\
+  !*** ./src/styles/block-style.css ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-eval("\n\n__webpack_require__(/*! ./styles/block-editor.css */ \"./src/styles/block-editor.css\");\n\nvar registerBlockType = wp.blocks.registerBlockType;\nvar _wp$editor = wp.editor,\n    InnerBlocks = _wp$editor.InnerBlocks,\n    RichText = _wp$editor.RichText,\n    MediaUpload = _wp$editor.MediaUpload;\nvar Button = wp.components.Button;\n\n\nvar sliderAllowedBlocks = ['core/paragraph'];\n\nregisterBlockType('brg/gutenberg-slider-block', {\n  title: 'Gutenberg Slider Block',\n  description: 'Container for the Gutenberg slider blocks',\n  parent: ['brg/gutenberg-slider-container'],\n  category: 'layout',\n  attributes: {\n    background: {\n      attribute: 'src',\n      selector: '.guttenberg-slide'\n    }\n  },\n  edit: function edit(_ref) {\n    var attributes = _ref.attributes,\n        className = _ref.className,\n        setAttributes = _ref.setAttributes;\n\n    var getImageButton = function getImageButton(openEvent) {\n      if (attributes.background) {\n        return React.createElement('img', {\n          src: attributes.background,\n          onClick: openEvent,\n          className: 'editor-slide-background'\n        });\n      } else {\n        return React.createElement(\n          'div',\n          { className: 'button-container' },\n          React.createElement(\n            Button,\n            {\n              onClick: openEvent,\n              className: 'button button-large'\n            },\n            'Pick an image'\n          )\n        );\n      }\n    };\n    return React.createElement(\n      'div',\n      { className: 'guttenberg-slide--editor' },\n      React.createElement(MediaUpload, {\n        onSelect: function onSelect(media) {\n          setAttributes({ background: media.url });\n        },\n        type: 'image',\n        value: attributes.background,\n        render: function render(_ref2) {\n          var open = _ref2.open;\n          return getImageButton(open);\n        }\n      }),\n      React.createElement(\n        'div',\n        { className: 'editor-slide-content' },\n        React.createElement(InnerBlocks, {\n          allowedBlocks: sliderAllowedBlocks\n        })\n      )\n    );\n  },\n  save: function save(_ref3) {\n    var attributes = _ref3.attributes;\n\n    return React.createElement(\n      'div',\n      { className: 'guttenberg-slide', style: 'background-image: url(\\'' + attributes.background + '\\');' },\n      React.createElement(\n        'div',\n        { className: 'guttenberg-slide__content' },\n        React.createElement(InnerBlocks.Content, null)\n      )\n    );\n  }\n});\n\n//# sourceURL=webpack:///./src/slider-block.js?");
-
-/***/ }),
-
-/***/ "./src/slider-container.js":
-/*!*********************************!*\
-  !*** ./src/slider-container.js ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-eval("\n\nvar registerBlockType = wp.blocks.registerBlockType;\nvar InnerBlocks = wp.editor.InnerBlocks;\n\n\nregisterBlockType('brg/gutenberg-slider-container', {\n  title: 'Gutenberg Slider Container',\n  description: 'Container for the Gutenberg slider blocks',\n  category: 'layout',\n  edit: function edit() {\n    // what we display in the editor\n    return React.createElement(\n      'div',\n      { className: 'editor-slider-container' },\n      React.createElement(InnerBlocks, null)\n    );\n  },\n  save: function save() {\n    return React.createElement(\n      'div',\n      { className: 'gutenberg__slider' },\n      React.createElement(InnerBlocks.Content, null)\n    );\n  }\n});\n\n//# sourceURL=webpack:///./src/slider-container.js?");
-
-/***/ }),
-
-/***/ "./src/styles/block-editor.css":
-/*!*************************************!*\
-  !*** ./src/styles/block-editor.css ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-eval("\nvar content = __webpack_require__(/*! !../../node_modules/css-loader!./block-editor.css */ \"./node_modules/css-loader/index.js!./src/styles/block-editor.css\");\n\nif(typeof content === 'string') content = [[module.i, content, '']];\n\nvar transform;\nvar insertInto;\n\n\n\nvar options = {\"hmr\":true}\n\noptions.transform = transform\noptions.insertInto = undefined;\n\nvar update = __webpack_require__(/*! ../../node_modules/style-loader/lib/addStyles.js */ \"./node_modules/style-loader/lib/addStyles.js\")(content, options);\n\nif(content.locals) module.exports = content.locals;\n\nif(false) {}\n\n//# sourceURL=webpack:///./src/styles/block-editor.css?");
+eval("\nvar content = __webpack_require__(/*! !../../node_modules/css-loader!./block-style.css */ \"./node_modules/css-loader/index.js!./src/styles/block-style.css\");\n\nif(typeof content === 'string') content = [[module.i, content, '']];\n\nvar transform;\nvar insertInto;\n\n\n\nvar options = {\"hmr\":true}\n\noptions.transform = transform\noptions.insertInto = undefined;\n\nvar update = __webpack_require__(/*! ../../node_modules/style-loader/lib/addStyles.js */ \"./node_modules/style-loader/lib/addStyles.js\")(content, options);\n\nif(content.locals) module.exports = content.locals;\n\nif(false) {}\n\n//# sourceURL=webpack:///./src/styles/block-style.css?");
 
 /***/ })
 

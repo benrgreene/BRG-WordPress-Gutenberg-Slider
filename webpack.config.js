@@ -1,9 +1,12 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/index.js',
+    entry: {
+        'index': './src/index.js',
+        'app': './src/app.js',
+    },
     output: {
-        filename: 'index.build.js',
+        filename: '[name].build.js',
         path: path.resolve(__dirname, 'build')
     }, 
     module: {
@@ -14,6 +17,10 @@ module.exports = {
                 query: {
                     presets: ['babel-preset-env', 'babel-preset-react']
                 }
+            },
+            {
+                test:/\.css$/,
+                use:['style-loader','css-loader']
             }
         ]
     },

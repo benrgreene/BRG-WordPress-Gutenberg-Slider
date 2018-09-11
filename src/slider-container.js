@@ -10,14 +10,14 @@ registerBlockType(
     edit() {
       // what we display in the editor
       return (
-        <div>
-          <InnerBlocks allowedBlock={['brg/gutenberg-slider-block']} />
+        <div className="editor-slider-container">
+          <InnerBlocks />
         </div>
       );
     },
     save() {
       return (
-        <div>
+        <div className="gutenberg__slider">
           <InnerBlocks.Content />
         </div>
       );

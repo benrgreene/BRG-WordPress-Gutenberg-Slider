@@ -1,0 +1,15 @@
+.editor-slider-container {
+  border: 1px solid #CCC;
+  padding: 10px 0;
+  background-color: #EFEFEF;
+}
+
+.editor-slide-background {
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.editor-slide-content {
+  background-color: #DDD;
+  padding: 5px 20px;
+}

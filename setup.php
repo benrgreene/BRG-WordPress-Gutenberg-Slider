@@ -8,6 +8,7 @@
   Author URI: www.benrgreene.com
 */
 
+// add the backend editor script
 add_action( 'enqueue_block_editor_assets', 'brg_gb_slider_register_assets' );
 function brg_gb_slider_register_assets() {
   // Add the slider container script
@@ -15,16 +16,17 @@ function brg_gb_slider_register_assets() {
     'brg-gutenberg-slider-block',
     plugins_url( 'build/index.build.js', __FILE__ )
   );
+}
 
-  // now we register the block type
-  register_block_type( 'brg/gutenberg-slider-block',
-    array(
-      'editor_script' => 'brg-gutenberg-slider-block',
-    )
-  );
-  register_block_type( 'brg/gutenberg-slider-container',
-    array(
-      'editor_script' => 'brg-gutenberg-slider-block',
-    )
-  );
+// Add our front end scripts
+add_action( 'init', 'brg_add_frontend_slider_scripts' );
+function brg_add_frontend_slider_scripts() {
+  if( is_admin() ) {
+    return;
+  }
+
+  wp_enqueue_script(
+    'brg-gutenberg-slider-block-frontend',
+    plugins_url( 'build/app.build.js', __FILE__ )
+  ); 
 }
