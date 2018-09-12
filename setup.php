@@ -3,9 +3,10 @@
 /*
   Plugin Name: Gutenberg Slider
   Description: Adds a slider block to the Gutenberg Editor
-  Version: 1
+  Version: 1.0
   Author: Ben Greene
   Author URI: www.benrgreene.com
+  License: GPLv2
 */
 
 // add the backend editor script
