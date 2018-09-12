@@ -9,7 +9,7 @@ const sliderAllowedBlocks = ['core/paragraph']
 registerBlockType(
   'brg/gutenberg-slider-block',
   {
-    title: 'Gutenberg Slider Block',
+    title: 'Slider Block',
     description: 'Container for the Gutenberg slider blocks',
     parent: ['brg/gutenberg-slider-container'],
     category: 'layout',
