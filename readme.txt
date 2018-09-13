@@ -1,7 +1,8 @@
-=== Gutenberg Slider ===
-Contributers: benrgreene
+=== Ben's Slider for Gutenberg ===
+Contributors: benrgreene
 Tags: Gutenberg, slider
-Stable tag: 1.0
+Stable tag: 1.0.3
+Tested up to: 4.9
 License: GPLv2 or later
 
 Adds a slider block to the Gutenberg Editor
@@ -22,3 +23,7 @@ Gutenberg Slider Block
 A special block that is designed to be used in the slider container. This contains a media selector, which you can use to select a background for the slider. There is also a section for adding child blocks, which will be the slider content displayed over the background. 
 
 All options for child blocks (such as text settings) are honored. So you can still set color, font size, etc for your content to create rich content.
+
+== Screenshots ==
+
+1. Slider in the wild
