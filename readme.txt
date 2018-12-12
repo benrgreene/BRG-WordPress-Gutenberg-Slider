@@ -1,8 +1,8 @@
 === Ben's Slider for Gutenberg ===
 Contributors: benrgreene
 Tags: Gutenberg, slider
-Stable tag: 1.0.3
-Tested up to: 4.9
+Stable tag: 1.0.4
+Tested up to: 5.0
 License: GPLv2 or later
 
 Adds a slider block to the Gutenberg Editor
