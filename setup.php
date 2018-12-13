@@ -15,7 +15,8 @@ function brg_gb_slider_register_assets() {
   // Add the slider container script
   wp_enqueue_script(
     'brg-gutenberg-slider-block',
-    plugins_url( 'build/index.build.js', __FILE__ )
+    plugins_url( 'build/index.build.js', __FILE__ ),
+    array('wp-blocks', 'wp-element')
   );
 }
 
@@ -29,5 +30,5 @@ function brg_add_frontend_slider_scripts() {
   wp_enqueue_script(
     'brg-gutenberg-slider-block-frontend',
     plugins_url( 'build/app.build.js', __FILE__ )
-  ); 
+  );
 }
