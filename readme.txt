@@ -1,7 +1,7 @@
 === Ben's Slider for Gutenberg ===
 Contributors: benrgreene
 Tags: Gutenberg, slider
-Stable tag: 1.0.5
+Stable tag: 1.0.4
 Tested up to: 5.0
 License: GPLv2 or later
 

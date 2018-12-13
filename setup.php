@@ -3,7 +3,7 @@
 /*
   Plugin Name: Ben's Slider for Gutenberg
   Description: Adds a slider block to the Gutenberg Editor
-  Version: 1.0.3
+  Version: 1.0.4
   Author: Ben Greene
   Author URI: www.benrgreene.com
   License: GPLv2
@@ -16,7 +16,7 @@ function brg_gb_slider_register_assets() {
   wp_enqueue_script(
     'brg-gutenberg-slider-block',
     plugins_url( 'build/index.build.js', __FILE__ ),
-    array('wp-blocks', 'wp-element')
+    array('wp-blocks', 'wp-element', 'wp-editor')
   );
 }
 
