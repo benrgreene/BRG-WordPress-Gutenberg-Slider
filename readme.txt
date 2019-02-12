@@ -5,7 +5,7 @@ Stable tag: 1.1.0
 Tested up to: 5.0
 License: GPLv2 or later
 
-Adds a slider block to the Gutenberg Editor
+Adds sliders to the Gutenberg editor.
 
 == Description ==
 
@@ -39,4 +39,4 @@ This block can only be added to the Slider Container block, it will not be avail
 == Changelog ==
 
 = 1.1 =
-* Moved the styles to the block settings panel in the sidebar
+* Moved the slider options to the block settings panel in the sidebar
