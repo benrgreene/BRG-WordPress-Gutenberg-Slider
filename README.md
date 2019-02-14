@@ -14,7 +14,9 @@ This is the wrapper for the slider. All blocks that are direct descendents of th
 There are a couple settings for the Slider Container block:
 
 * Arrows: this is to set whether or not the slider has navigation arrows.
+* Arrow Content: this is to set the content for the nav arrows (seperate settings for both arrows). Doesn't apply when arrows aren't displayed.
 * Dots: Whether or not the slider has navigation dots.
+* Dot Color: this is the color of the dots, doesn't apply when dots aren't displayed.
 * Timer: Setting a value will add a timer for the slider to auto navigtate between slides. A value of "0" means there is no timer. 
 
 ### Gutenberg Slider Block

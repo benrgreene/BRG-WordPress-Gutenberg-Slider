@@ -3,7 +3,7 @@
 /*
   Plugin Name: Ben's Slider for Gutenberg
   Description: Adds a slider block to the Gutenberg Editor
-  Version: 1.1.0
+  Version: 1.2.0
   Author: Ben Greene
   Author URI: www.benrgreene.com
   License: GPLv2
