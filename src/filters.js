@@ -1,7 +1,7 @@
 const { createHigherOrderComponent } = wp.compose;
 const { Fragment } = wp.element;
 const { InspectorControls } = wp.editor;
-const { PanelBody } = wp.components;
+const { PanelBody, ColorPalette } = wp.components;
 
 /**
  *  Add the custom block control 
@@ -39,6 +39,21 @@ const withInspectorControls = createHigherOrderComponent( ( BlockEdit ) => {
                 value={ props.attributes['data-timer'] }/>
               </div>
               <div>(Leave empty for no timer)</div>
+              <br/>
+              <div><label for="dot-color">Dot Color:</label></div>
+              <div>
+                <ColorPalette 
+                    colors={[
+                      {'name': 'Default Blue', 'color': '#1188FF'},
+                      {'name': 'Red', 'color': '#FF4444'},
+                      {'name': 'Green', 'color': '#44FF66'},
+                      {'name': 'Black', 'color': '#000000'},
+                      {'name': 'White', 'color': '#FFFFFF'}
+                    ]}
+                    value={props.attributes['data-dot-color'] || "#1188FF"}
+                    onChange={( color ) => props.setAttributes({'data-dot-color': color })} 
+                />
+              </div>
             </PanelBody>
           </InspectorControls>
         </Fragment>
@@ -63,34 +78,26 @@ function setContainerValidation (block, blockType, innerHTML) {
     dummyEl.innerHTML   = innerHTML
     let blockElement    = dummyEl.firstChild
 
-    // set the blocktype info for our new attribute
-    blockType.attributes['data-arrows'] = {
-      type: 'string',
-      default: ''
-    }
-    blockType.attributes['data-dots'] = {
-      type: 'string',
-      default: ''
-    }
-    blockType.attributes['data-timer'] = {
-      type: 'string',
-      default: ''
-    }
+    const blockTypeAttributes = [
+      { 'name': 'data-arrows', 'type': 'string' }, 
+      { 'name': 'data-dots', 'type': 'string' }, 
+      { 'name': 'data-timer', 'type': 'string' }, 
+      { 'name': 'data-dot-color', 'type': 'string' }
+    ]
 
-    let arrowsVal = blockElement.getAttribute('data-arrows')
-    let dotsVal   = blockElement.getAttribute('data-dots')
-    let timerVal  = blockElement.getAttribute('data-timer')
-
-    // set that container type
-    if (arrowsVal) {
-      block['data-arrows'] = arrowsVal
-    }
-    if (dotsVal) {
-      block['data-dots']   = dotsVal
-    }
-    if (timerVal) {
-      block['data-timer']  = timerVal
-    }
+    // loop through the attributes and perform individual setup for each
+    blockTypeAttributes.forEach((blockAttribute) => {
+      // Add setting type to the validation settings
+      blockType.attributes[blockAttribute.name] = {
+        type: blockAttribute.type,
+        default: ''
+      }
+      // If there is a value for the setting, add it to the block settings
+      let existingAttributeValue = blockElement.getAttribute(blockAttribute.name)
+      if (existingAttributeValue) {
+        block[blockAttribute.name] = existingAttributeValue
+      }
+    })
   }
   return block
 }
@@ -101,15 +108,19 @@ wp.hooks.addFilter('blocks.getBlockAttributes', 'brg-guten-slider/validate-conta
  */
 function setContainerAttribute (el, block, atts) {
   if (block.name == 'brg/gutenberg-slider-container') {
-    if (atts['data-arrows']) {
-      el.props['data-arrows'] = atts['data-arrows'] || 'true'  
-    }
-    if (atts['data-dots']) {
-      el.props['data-dots']   = atts['data-dots'] || 'true'
-    }
-    if (atts['data-timer']) {
-      el.props['data-timer']  = atts['data-timer'] || ''
-    }
+    const attributeTypes = [
+      { 'name': 'data-arrows', 'default': 'true' },
+      { 'name': 'data-dots', 'default': 'true' },
+      { 'name': 'data-timer', 'default': '' },
+      { 'name': 'data-dot-color', 'default': '#1188FF' }
+    ]
+
+    // Ensure that if attribute exists, it's set/saved
+    attributeTypes.forEach((attributeType) => {
+      if (atts[attributeType.name]) {
+        el.props[attributeType.name] = atts[attributeType.name] || attributeType.default
+      }  
+    })
   }
   return el
 }

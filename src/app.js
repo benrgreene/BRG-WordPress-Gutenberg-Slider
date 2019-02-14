@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const haveDots   = slider.hasAttribute('data-dots') ? (slider.getAttribute('data-dots') == 'true') : true;
     const haveArrows = slider.hasAttribute('data-arrows') ? (slider.getAttribute('data-arrows') == 'true') : true;
     const timer      = slider.hasAttribute('data-timer') ? parseInt(slider.getAttribute('data-timer'), 10) * 1000 : false;
+    const dotColor   = slider.hasAttribute('data-dot-color') ? slider.getAttribute('data-dot-color') : '#1188FF';
     // get the direct children of the slider
     // and set them all to have the 'slide' class
     const directChildren = document.querySelectorAll(`#${slider.id} > *`);
@@ -25,7 +26,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
       'slider': `#${slider.id}`,
       'hasArrows': haveArrows,
       'hasDots': haveDots,
-      'timer': timer
+      'timer': timer,
+      'dotColor': dotColor
     });
   });
 });
